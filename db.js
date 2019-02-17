@@ -1,12 +1,10 @@
 const sequelize=require('sequelize');
 
-
-
 let connection= new sequelize('user_db','user','password',{
 	host:'localhost',
 	dialect:'mysql'
 });
-let User=connection.define('article',{
+let User=connection.define('users',{
 	name:{
 		type:sequelize.STRING,
 		unique:true
@@ -14,23 +12,27 @@ let User=connection.define('article',{
 	password:{
 		type:sequelize.STRING
 	}
+},{
+	freezeTableName: true
 });
-let a=(user)=>{
-	connection
-	.sync({
-		logging:console.log("logged")
-	})
-	.then(()=>{
-		User.create({
-			name:user.email,
-			password:user.pwd
-
+let a={
+	createUser: (user)=>{
+		connection
+		.sync({
+			logging:console.log("logged")
 		})
-	})
-	.catch((err)=>{
-		console.log("Error creating database");
-	});
-	return true;
+		.then(()=>{
+			User.create({
+				name:user.email,
+				password:user.pwd
+
+			})
+		})
+		.catch((err)=>{
+			console.log("Error creating database");
+		});
+		return true;
+	}
 }
 
 
