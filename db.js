@@ -50,7 +50,7 @@ let a = {
 	createUser: (user, result)=>{
 		User.create({
 			name:user.email,
-			password:user.pwd
+			password:user.password
 		}).then(() => {
 			return result(null);
 		}).catch((err) => {
@@ -103,6 +103,22 @@ let a = {
 		}).catch((error) => {
 			console.log(error);
 		})
+	},
+	checkEmail: async (email, result) => {
+		User.findOne({
+			where: {
+				name: email
+			}
+		}).then((status) => {
+			// console.log(result);
+			if (status != null) {
+				return result(true);
+			} else {
+				return result(false);
+			}
+		}).catch(err => {
+			console.log(err);
+		});
 	}
 }
 

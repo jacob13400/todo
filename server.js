@@ -11,17 +11,36 @@ hbs.registerPartials(__dirname+'/views/partials');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/action',(req,res)=>{	
-		// if(db.a.createUser(req.body)){
-		// 	res.redirect('/login');
-		// }
-		db.a.createUser(req.body, (error) => {
-			if (!error) {
-				res.redirect('/login');
-			} else {
-				console.log(error);
-			}
+app.post('/signup',(req,res)=>{	
+		const email = req.body.email
+		const password = req.body.password
+		let errors = []
+
+		if(!email || !password) {
+			errors.push('Please fill out all the fields');
+		} else {
+			db.a.checkEmail(email, (result) => {
+				// if(result) {
+				// 	errors.push('Email already exists.');
+				// }
+				
 		});
+	}
+		if (errors.length > 0) {
+			res.render('signup.hbs', {
+				errors: errors
+			});
+		} else {
+			//set session here
+			res.redirect('/login')
+		}
+		// db.a.createUser(req.body, (error) => {
+		// 	if (!error) {
+		// 		res.render('login.hbs');
+		// 	} else {
+		// 		console.log(error);
+		// 	}
+		// });
 });
 app.get('/signup',(req,res)=>{
 	res.render('signup.hbs')
