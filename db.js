@@ -69,15 +69,40 @@ let a = {
 		});
 	},
 	toggleTask: (task, result) => {
+		console.log(task);
 		Todo.update({
-			completed: task.status
+			completed: task.toggle
 		},{
-			id: task.id
+			where: {
+				id: task.id
+			}
 		}).then(() => {
 			return result(null);
 		}).catch((error) => {
 			return result(error.message)
 		});
+	},
+	getTasks: (userid, result) => {
+		Todo.findAll({
+			where: {
+				userid: userid
+			}
+		}).then((res) => {
+			return result(res);
+		}).catch((error) => {
+			console.log(error);
+		})
+	},
+	deleteTask: (task, result) => {
+		Todo.destroy({
+			where: {
+				id: task.id
+			}
+		}).then(() => {
+			return result(null);
+		}).catch((error) => {
+			console.log(error);
+		})
 	}
 }
 

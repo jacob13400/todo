@@ -25,13 +25,18 @@ app.post('/action',(req,res)=>{
 });
 app.get('/signup',(req,res)=>{
 	res.render('signup.hbs')
-})
+});
+
 app.get('/login',(req,res)=>{
 	res.render('login.hbs')
-})
+});
+
 app.get('/todo',(req,res)=>{
-	res.render('todo.hbs')
-})
+	db.a.getTasks(1, (result) => {
+		res.render('todo.hbs', {"result": result})
+	});
+});
+
 app.post('/todo', (req,res) => {
 	db.a.addTask(req.body, (error) => {
 		if (!error) {
@@ -40,7 +45,20 @@ app.post('/todo', (req,res) => {
 			console.log(error);
 		}
 	});
-})
+});
+
+app.get('/todo/toggle/:id/:toggle', (req, res) => {
+	db.a.toggleTask({id: req.params.id , toggle:req.params.toggle}, (result) => {
+		res.redirect('/todo');
+	})
+});
+
+app.get('/todo/delete/:id', (req, res) => {
+	db.a.deleteTask({id: req.params.id}, (result) => {
+		res.redirect('/todo');
+	})
+});
+
 app.listen(3000);
 
 

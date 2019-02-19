@@ -10,9 +10,28 @@
 			<div class="jumbotron">
 				<h1>Todo</h1>
 				<form action='/todo' method="post">
-				    <input type="name" class="form-control" id="task" name="task">
-		  			<button type="submit" class="btn btn-default">Submit</button>
-				</form>
+				    <input type="name" class="form-control" id="task" name="task"><br>
+		  			<input type="submit" value="Add task">
+				</form><br>
+				<ul class="list-group">
+					{{#result}}
+					<form action="/todo/toggle/{{id}}/{{#if completed}}0{{else}}1{{/if}}">
+						<li class="list-group-item">
+							{{#if completed}}
+								<strike>{{task}}</strike>
+								<input type="submit" value="Not Done">
+							{{else}}
+								{{task}}
+								<input type="submit" value="Done">
+							{{/if}}
+							
+						</li>
+					</form>
+					<form action="/todo/delete/{{id}}">
+						<input type="submit" value="Delete">
+					</form>
+					{{/result}}
+				</ul>
 			</div>
 		</div>
 	</body>
