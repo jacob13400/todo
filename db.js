@@ -8,22 +8,9 @@ let connection= new sequelize('user_db','user','password',{
 let User=connection.define('users',{
 	name:{
 		type:sequelize.STRING,
-		unique:true,
-		validate:{
-			notEmpty: {
-				args: true,
-				msg: "Username field cannot be empty"
-			}
-		}
 	},
 	password:{
 		type:sequelize.STRING,
-		validate:{
-			notEmpty: {
-				args: true,
-				msg: "Password field cannot be empty"
-			}
-		}
 	}
 },{
 	freezeTableName: true
@@ -47,17 +34,6 @@ let Todo=connection.define('todos',{
 connection.sync();
 
 let a = {
-	createUser: (user, result)=>{
-		User.create({
-			name:user.email,
-			password:user.password
-		}).then(() => {
-			return result(null);
-		}).catch((err) => {
-			return result(err.message);
-		});
-		return true;
-	},
 	addTask: (task, result) => {
 		Todo.create({
 			userid: 1,
@@ -104,23 +80,8 @@ let a = {
 			console.log(error);
 		})
 	},
-	checkEmail: async (email, result) => {
-		User.findOne({
-			where: {
-				name: email
-			}
-		}).then((status) => {
-			// console.log(result);
-			if (status != null) {
-				return result(true);
-			} else {
-				return result(false);
-			}
-		}).catch(err => {
-			console.log(err);
-		});
-	}
 }
 
 
 module.exports.a=a;
+module.exports.User = User;
