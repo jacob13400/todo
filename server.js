@@ -18,29 +18,39 @@ app.post('/signup',(req,res)=>{
 
 		if(!email || !password) {
 			errors.push('Please fill out all the fields');
-		} else {
-			db.a.checkEmail(email, (result) => {
-				// if(result) {
-				// 	errors.push('Email already exists.');
-				// }
-				
-		});
-	}
+		}
+
 		if (errors.length > 0) {
 			res.render('signup.hbs', {
 				errors: errors
 			});
 		} else {
-			//set session here
-			res.redirect('/login')
+			db.User.findOne({
+				where: {
+					name: email
+				}
+			}).then((result) => {
+				if (result) {
+					errors.push('Email already exists!');
+					console.log(result)
+					res.render('signup.hbs', {
+						errors: errors
+					});
+				} else {
+						db.User.create({
+							name: email,
+							password:password
+						}).then(() => {
+							res.redirect('/login')
+						}).catch((err) => {
+							console.log(err);
+						});
+				}
+			}).catch(err => {
+				console.log(err);
+			});
 		}
-		// db.a.createUser(req.body, (error) => {
-		// 	if (!error) {
-		// 		res.render('login.hbs');
-		// 	} else {
-		// 		console.log(error);
-		// 	}
-		// });
+		
 });
 app.get('/signup',(req,res)=>{
 	res.render('signup.hbs')
@@ -48,6 +58,48 @@ app.get('/signup',(req,res)=>{
 
 app.get('/login',(req,res)=>{
 	res.render('login.hbs')
+});
+
+app.post('/login',(req,res)=>{	
+	const email = req.body.email
+	const password = req.body.password
+	let errors = []
+
+	if(!email || !password) {
+		errors.push('Please fill out all the fields');
+	}
+
+	if (errors.length > 0) {
+		res.render('login.hbs', {
+			errors: errors
+		});
+	} else {
+		db.User.findOne({
+			where: {
+				name: email
+			}
+		}).then((result) => {
+			if (result) {
+				if (result.dataValues.password != password) {
+					errors.push('Incorrect password.');
+					res.render('login.hbs', {
+						errors: errors
+					});	
+				} else {
+					// set session
+					// redirect
+				}
+			} else {
+				errors.push('That user is not found.');
+				res.render('login.hbs', {
+					errors: errors
+				});
+			}
+		}).catch(err => {
+			console.log(err);
+		});
+	}
+	
 });
 
 app.get('/todo',(req,res)=>{
