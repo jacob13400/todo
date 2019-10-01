@@ -1,2 +1,2 @@
 # todo
-todo practice using sequelize ORM package
+I will be making some changes in here. Please ignore for a while.
